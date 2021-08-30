@@ -87,8 +87,10 @@
     - 如果workerCount >= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。
     - 如果workerCount >= corePoolSize && workerCount < maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。
     - 如果workerCount >= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
-    - 如果线程池中线程数超过corePoolSize，且线程空闲下来时，超过空闲时间 就会被销毁，直到线程数==corePoolSize, 如果设置allowCoreThreadTimeOut=true,那么超过keepAliveTime时，低于corePoolSize数量的线程空闲时间达到keepAliveTime也会销毁
-4. 什么情况下使用线程池  
+    - 如果线程池中线程数超过corePoolSize，且线程空闲下来时，超过空闲时间 就会被销毁，直到线程数==corePoolSize, 如果设置allowCoreThreadTimeOut=true,那么超过keepAliveTime时，低于corePoolSize数量的线程空闲时间达到keepAliveTime也会销毁  
+      ![avatar](../picture/线程池/线程池任务调度流程.png)  
+4. 线程池的阻塞队列    
+      ![avatar](../picture/线程池/线程池阻塞队列实现方式.png)  
+5. 什么情况下使用线程池  
    T1 创建线程时间，T2 在线程中执行任务的时间，T3 销毁线程时间
-
 
