@@ -52,9 +52,33 @@
 
 
 
-
-
-
-
+# 线程池
+1. 线程池有哪些核心参数
+    1. 核心线程数：corePoolSize ,线程池中活跃的线程数  
+       allowCoreThreadTimeOut的值是控制核心线程数是否在没有任务时是否停止活跃的线程，
+       当它的值为true时，在线程池没有任务时，所有的工作线程都会停止
+    2. 最大线程数：maximumPoolSize
+    3. 多余线程存活时长：keepAliveTime, 多余线程数 = 最大线程数 - 核心线程数
+       如果在这个时间范围内，多余线程没有任务需要执行，则多余线程就会停止
+    4. 多余线程存活时间的单位：TimeUnit
+    5. 任务队列：workQueue
+       线程池的任务队列，使用线程池执行任务时，任务会先提交到这个队列中，然后工作线程取出任务进行执行，当这个队列满了，线程池就会执行拒绝策略。
+    6. 线程工厂：threadFactory
+       创建线程池的工厂，线程池将使用这个工厂来创建线程池，自定义线程工厂需要实现ThreadFactory接口。
+    7. 拒绝执行处理器（也称拒绝策略）：handler
+       当线程池无空闲线程，并且任务队列已满，此时将线程池将使用这个处理器来处理新提交的任务。
+2. 线程池有哪些拒绝策略(0到9)
+    - AbortPolicy         --(0,1) 当任务添加到线程池中被拒绝时，它将抛出 RejectedExecutionException 异常。
+    - CallerRunsPolicy    --(全部执行完) 当任务添加到线程池中被拒绝时，会在线程池当前正在运行的Thread线程池中处理被拒绝的任务。
+    - DiscardOldestPolicy --(0,9) 当任务添加到线程池中被拒绝时，丢弃队列最后面的任务，然后将被拒绝的任务添加到等待队列后面
+    - DiscardPolicy       --(0,1) 当任务添加到线程池中被拒绝时，线程池将丢弃被拒绝的任务
+3. 线程池工作流程/原理
+    - 如果workerCount < corePoolSize，则创建并启动一个线程来执行新提交的任务。
+    - 如果workerCount >= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。
+    - 如果workerCount >= corePoolSize && workerCount < maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。
+    - 如果workerCount >= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
+    - 如果线程池中线程数超过corePoolSize，且线程空闲下来时，超过空闲时间 就会被销毁，直到线程数==corePoolSize, 如果设置allowCoreThreadTimeOut=true,那么超过keepAliveTime时，低于corePoolSize数量的线程空闲时间达到keepAliveTime也会销毁
+4. 什么情况下使用线程池  
+   T1 创建线程时间，T2 在线程中执行任务的时间，T3 销毁线程时间
 
 
