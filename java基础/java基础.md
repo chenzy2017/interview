@@ -1,5 +1,15 @@
-# hashmap
+# java基础
+1. 对list<String>去重
+    1. 用set;
+    2. java8里的stream.distinct()方法;
+       重写equals()方法和hashCode()方法, 再用list.contains方法比较
+    3. 利用Iterator遍历，new list contains(string), remove方法移除去重
+    4. hashmap的key不可重复
 
+2. 为什么重写equals方法必须重写hashcode?  
+   因为java约定, 两个相等的对象必须具有相等的散列码;如果不重写, 会导致对象相等, 但是有可能两个的散列码不相等;
+   
+# hashmap
 - 数据结构  
   数据+链表,1.8之后新增红黑树,查询性能从o(n)提升到o(lgn)
 - 允许key和value为null
