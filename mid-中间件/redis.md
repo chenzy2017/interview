@@ -1,4 +1,4 @@
-#redis
+# redis
 1. redis与数据库数据一致性  
    延迟双删, 内存队列  
    我的解决办法是通过canal中间件解析mysql二进制,然后采用kafka做异步消息;
