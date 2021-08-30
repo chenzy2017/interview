@@ -9,7 +9,8 @@
     7. varchar不加单引号索引失效
     8. or连接(用它来连接时索引会失效)
     9. order by(后面既有desc,又有asc;  后面两个字段不遵循最左前缀法则;  含非索引字段)
-    10. group by一样
+    10. group by一样  
+   <br/>
 2. 如何选择合适的列创建索引  
    3要 3不要
     - 3要:
@@ -19,7 +20,8 @@
     - 3不要:
         1. 唯一性很差的字段不合适做索引，如性别(eg:有10条数据, 如果建立了索引, 需要先在非主键索引表中找到6个女生, 再回表扫描6行数据, 性能还不如不用)
         2. 更新频繁的字段不适合，耗时且影响性能
-        3. Where条件里用不到的字段不创建索引
+        3. Where条件里用不到的字段不创建索引  
+    <br/>
 3. delete会有什么隐患? 怎么优化
     - 隐患:
         1. 因为delete+where 删除记录数据库空间不减少, 会产生大量碎片，影响磁盘IO；---->解决办法:使用 OPTIMIZE TABLE 整理数据文件的碎片,
@@ -29,13 +31,26 @@
         2. 删除三个月以前的数据正确操作(晚上没有业务场景):
             1. 先创建临时表tmp
             2. 将需要的数据保留到tmp表中,然后通过rename将当前业务表替换为bak表,再将tmp表替换为业务表, 最后删除bak表;
-        3. 每隔一段时间执行一次 OPTIMIZE TABLE
+        3. 每隔一段时间执行一次 OPTIMIZE TABLE  
+    <br/>
 4. 事务隔离级别  
    事务具有原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性
-    1. 读未提交（READ UNCOMMITTED）
-    2. 读提交 （READ COMMITTED）
-    3. 可重复读 （REPEATABLE READ）
-    4. 串行化 （SERIALIZABLE）
+    1. Read Uncommited(RU)：读未提交，一个事务可以读到另一个事务未提交的数据！
+       为了解决下图中问题:  
+       ![avatar](../picture/java基础/读未提交.png)
+    2. Read Committed (RC)：读已提交，一个事务可以读到另一个事务已提交的数据!
+       为了解决下图中问题:
+       ![avatar](../picture/java基础/读已提交.png)
+    3. Repeatable Read (RR):可重复读，加入间隙锁，一定程度上避免了幻读的产生！注意了，只是一定程度上，并没有完全避免
+       ![avatar](../picture/java基础/可重复读.png)
+    4. Serializable:串行化，该级别下读写串行化，且所有的select语句后都自动加上lock in share mode，即使用了共享锁。因此在该隔离级别下，使用的是当前读，而不是快照读。  
+       完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞
+       完全串行化的读，每次写都需要获得所有行级锁，读写相互都会阻塞
+       ![avatar](../picture/java基础/幻读.png)
+       Next-Key锁(行锁+间隙锁)解决幻读问题,
+       其中有索引,则在这条记录的两边，也就是(负无穷,10]、(10,30]这两个区间加了间隙锁;
+       如果没有索引, 则在整个表加上间隙锁(即看起来就是表锁)
+    <br/>
 5. 事务和数据库锁的关系?
     1. MyISAM引擎:表级锁;  innoDB:行级锁，它也支持表级锁;
     2. 读操作可以分成两类：快照读 (snapshot read)与当前读 (current read)。
@@ -50,4 +65,13 @@
        select * from table where num = 200 lock in share mode 共享锁  
        select * from table where num = 200 for update 行级锁  
        这是通过显示加锁实现的,当执行update,insert,delete的时候 默认是加行锁的
+
+
+
+
+
+
+
+
+
 
