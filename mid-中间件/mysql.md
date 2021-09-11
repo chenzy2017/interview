@@ -37,16 +37,16 @@
    事务具有原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性
     1. Read Uncommited(RU)：读未提交，一个事务可以读到另一个事务未提交的数据！
        为了解决下图中问题:  
-       ![avatar](../picture/java基础/读未提交.png)
+       ![avatar](../0-picture/java基础/读未提交.png)
     2. Read Committed (RC)：读已提交，一个事务可以读到另一个事务已提交的数据!
        为了解决下图中问题:
-       ![avatar](../picture/java基础/读已提交.png)
+       ![avatar](../0-picture/java基础/读已提交.png)
     3. Repeatable Read (RR):可重复读(默认隔离级别)，加入间隙锁，一定程度上避免了幻读的产生！注意了，只是一定程度上，并没有完全避免
-       ![avatar](../picture/java基础/可重复读.png)
+       ![avatar](../0-picture/java基础/可重复读.png)
     4. Serializable:串行化，该级别下读写串行化，且所有的select语句后都自动加上lock in share mode，即使用了共享锁。因此在该隔离级别下，使用的是当前读，而不是快照读。  
        完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞
        完全串行化的读，每次写都需要获得所有行级锁，读写相互都会阻塞
-       ![avatar](../picture/java基础/幻读.png)
+       ![avatar](../0-picture/java基础/幻读.png)
        Next-Key锁(行锁+间隙锁)解决幻读问题,
        其中有索引,则在这条记录的两边，也就是(负无穷,10]、(10,30]这两个区间加了间隙锁;
        如果没有索引, 则在整个表加上间隙锁(即看起来就是表锁)
